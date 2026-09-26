@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/core/routes/app_routes.dart';
 import 'package:news_app/core/theme/app_theme.dart';
+import 'package:news_app/view/screens/details_screen.dart';
 import 'package:news_app/view/screens/home_screen.dart';
 
 void main() {
@@ -13,9 +14,10 @@ class NewsApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: AppRoutes.home,
+      initialRoute: AppRoutes.details,
       routes: {
-        AppRoutes.home: (context) => const HomeScreen(),
+        AppRoutes.home: (context) =>  HomeScreen(),
+        AppRoutes.details:(context) =>  DetailsScreen(),
       },
         theme: AppTheme.dark,
         themeMode: .dark,
