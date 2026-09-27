@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/api/result_api.dart';
 import 'package:news_app/data/api_manager.dart';
 import 'package:news_app/data/news_model.dart';
 import 'package:news_app/view/widgets/image_news.dart';
@@ -13,7 +14,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Article> articles = [];
-
+  String? error;
+  bool isLoading = true;
   @override
   void initState() {
     super.initState();
@@ -24,16 +26,27 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Center(child: Text("News"))),
-      body: ListView.builder(
-        itemBuilder: (context, index) => ItemCard(article: articles[index]),
-        itemCount: articles.length,
-      ),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemBuilder: (context, index) =>
+                  ItemCard(article: articles[index]),
+              itemCount: articles.length,
+            ),
     );
   }
 
- void  getArticles() async {
-    var newModel= await ApiManager.getNews();
-    articles = newModel.articles?? [];
+  void getArticles() async {
+    var result = await ApiManager.getNews();
+
+    switch (result) {
+      case Success<NewsModel>():
+        articles = result.data.articles ?? [];
+
+      case Error<NewsModel>():
+        error = result.error;
+    }
+    isLoading = false;
     setState(() {});
   }
 }
